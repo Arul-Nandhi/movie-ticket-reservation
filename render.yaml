@@ -1,0 +1,46 @@
+services:
+  # 1. Django Backend Web Service
+  - type: web
+    name: cinevault-backend
+    env: python
+    rootDir: backend
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn cinevault.wsgi:application"
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cinevault-db
+          property: connectionString
+      - key: SEED_DATABASE
+        value: "True" # Set to "True" to seed mock data automatically on first deploy. Set to "False" after that.
+
+  # 2. React Frontend Static Site
+  - type: web
+    name: cinevault-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: "npm run build"
+    publishPath: "dist"
+    envVars:
+      - key: VITE_API_BASE_URL
+        fromService:
+          name: cinevault-backend
+          type: web
+          property: url
+          path: "/api"
+    routes:
+      # Rewrite rule to route all frontend routes to index.html for React Router SPA routing to work on refresh
+      - type: rewrite
+        source: "/*"
+        destination: "/index.html"
+
+databases:
+  # 3. PostgreSQL Database Service
+  - name: cinevault-db
+    plan: free
