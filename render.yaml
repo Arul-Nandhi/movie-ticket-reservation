@@ -4,7 +4,7 @@ services:
     name: cinevault-backend
     env: python
     rootDir: backend
-    buildCommand: "./build.sh"
+    buildCommand: "bash build.sh"
     startCommand: "gunicorn cinevault.wsgi:application"
     envVars:
       - key: PORT
@@ -21,9 +21,8 @@ services:
         value: "True" # Set to "True" to seed mock data automatically on first deploy. Set to "False" after that.
 
   # 2. React Frontend Static Site
-  - type: web
+  - type: static
     name: cinevault-frontend
-    env: static
     rootDir: frontend
     buildCommand: "npm run build"
     publishPath: "dist"
