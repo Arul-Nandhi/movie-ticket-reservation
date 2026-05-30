@@ -29,11 +29,7 @@ services:
     staticPublishPath: "dist"
     envVars:
       - key: VITE_API_BASE_URL
-        fromService:
-          name: cinevault-backend
-          type: web
-          property: url
-          path: "/api"
+        value: "https://cinevault-backend.onrender.com/api"
     routes:
       # Rewrite rule to route all frontend routes to index.html for React Router SPA routing to work on refresh
       - type: rewrite
