@@ -21,11 +21,12 @@ services:
         value: "True" # Set to "True" to seed mock data automatically on first deploy. Set to "False" after that.
 
   # 2. React Frontend Static Site
-  - type: static
+  - type: web
     name: cinevault-frontend
+    env: static
     rootDir: frontend
     buildCommand: "npm run build"
-    publishPath: "dist"
+    staticPublishPath: "dist"
     envVars:
       - key: VITE_API_BASE_URL
         fromService:
